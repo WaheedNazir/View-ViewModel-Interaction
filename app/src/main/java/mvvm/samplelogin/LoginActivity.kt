@@ -1,13 +1,13 @@
 package mvvm.samplelogin
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.waheed.mvvmpoc.utils.KeyboardUtils
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -22,8 +22,6 @@ class LoginActivity : AppCompatActivity() {
         viewmodel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         initObservables()
-
-        progress_circular.visibility = View.GONE
 
         btn_continue.setOnClickListener {
             KeyboardUtils.hideKeyboard(this)
