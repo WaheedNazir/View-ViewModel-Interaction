@@ -13,32 +13,37 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
-    private var viewmodel: LoginViewModel? = null
+    /**
+     * Instance of LoginViewModel
+     */
+    private lateinit var loginViewModel: LoginViewModel
 
+
+    /**
+     * onCreate
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        viewmodel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
+        /**
+         * Initialize view model
+         */
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         initObservables()
 
         btn_continue.setOnClickListener {
             KeyboardUtils.hideKeyboard(this)
-            viewmodel?.login()
+            loginViewModel.login()
         }
 
+        /**
+         * Class to Handle Text Change Listener For Email and Password Field
+         */
         class CustomTextWatcher(private val view: View) : TextWatcher {
 
             override fun afterTextChanged(s: Editable?) {
-                when {
-                    view.id == R.id.email -> {
-                        viewmodel?.setEmail(s.toString())
-                    }
-                    view.id == R.id.password -> {
-                        viewmodel?.setPassword(s.toString())
-                    }
-                }
             }
 
             override fun beforeTextChanged(s: CharSequence?,
@@ -49,42 +54,59 @@ class LoginActivity : AppCompatActivity() {
                                        start: Int, before: Int, count: Int) {
                 when {
                     view.id == R.id.email -> {
-                        viewmodel?.onEmailChanged(s.toString())
+                        loginViewModel.setEmail(s.toString())
                     }
                     view.id == R.id.password -> {
-                        viewmodel?.onPasswordChanged(s.toString())
+                        loginViewModel.setPassword(s.toString())
                     }
                 }
             }
         }
 
+        /**
+         * Attach TextWatcher Listener
+         */
         email.addTextChangedListener(CustomTextWatcher(email))
         password.addTextChangedListener(CustomTextWatcher(password))
     }
 
+
+    /**
+     * Start Listening Live Data Observers
+     */
     private fun initObservables() {
 
-        viewmodel?.isButtonSelected()?.observe(this, Observer<Boolean> {
+        /**
+         * Login button state update, Observer
+         */
+        loginViewModel.isButtonSelected().observe(this, Observer<Boolean> {
             btn_continue.isEnabled = it
         })
 
 
-        viewmodel?.isProgressDialog()?.observe(this, Observer<Boolean> {
-            when {
-                it == true -> {
+        /**
+         * Progress dialog observer
+         */
+        loginViewModel.isProgressDialog().observe(this, Observer<Boolean> {
+            when (it) {
+                true -> {
                     progress_circular.visibility = View.VISIBLE
                 }
-                it == false -> {
+                false -> {
                     progress_circular.visibility = View.GONE
                 }
             }
         })
 
 
-        viewmodel?.userLogin()?.observe(this, Observer { user ->
-            Toast.makeText(this, "Welcome, ${user?.name}, ${user?.personal_image}", Toast.LENGTH_LONG).show()
+        /**
+         * Observing dummy API Call data
+         */
+        loginViewModel.userLogin().observe(this, Observer { user ->
+            Toast.makeText(this,
+                    "Welcome, ${user?.name}, ${user?.personal_image}",
+                    Toast.LENGTH_LONG).show()
         })
-
 
     }
 

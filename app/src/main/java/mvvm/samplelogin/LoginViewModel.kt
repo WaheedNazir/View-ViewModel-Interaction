@@ -1,58 +1,81 @@
 package mvvm.samplelogin
 
 import android.app.Application
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
-import android.os.CountDownTimer
+import androidx.lifecycle.MutableLiveData
 
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
+    /**
+     * Login button state enabled/disabled LiveData
+     */
+    private var btnSelected: MutableLiveData<Boolean> = MutableLiveData()
 
-    private var btnSelected: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false) // You can initialize it here or in init bloc as well
     fun isButtonSelected(): LiveData<Boolean> = btnSelected
 
+    /**
+     *  Progress show/hide LiveData
+     */
+    private var progressDialog: MutableLiveData<Boolean> = MutableLiveData()
 
-    private var progressDialog: MutableLiveData<Boolean>
     fun isProgressDialog(): LiveData<Boolean> = progressDialog
 
-    private var email: MutableLiveData<String>
-    private var password: MutableLiveData<String>
 
+    /**
+     * Email LiveData
+     */
+    private var email: MutableLiveData<String> = MutableLiveData()
 
-    private var userLogin: MutableLiveData<User>
+    /**
+     * Password LiveData
+     */
+    private var password: MutableLiveData<String> = MutableLiveData()
+
+    /**
+     * User LiveData that would return from API Call
+     */
+    private var userLogin: MutableLiveData<User> = MutableLiveData()
+
     fun userLogin(): LiveData<User> = userLogin
 
+    /**
+     * Initialize all LiveData fields to default values.
+     */
     init {
-        progressDialog = MutableLiveData<Boolean>()
-        email = MutableLiveData("")
-        password = MutableLiveData<String>("") // Type <String> is optional it is type inference like I've done this for password field
-        userLogin = MutableLiveData<User>()
+        btnSelected.value = false
+        progressDialog.value = false
+        email.value = ""
+        password.value = ""
+        userLogin = MutableLiveData()
     }
 
+
+    /**
+     * Updating Email to the Live Data and update next button staterr
+     */
     fun setEmail(email: String) {
         this.email.value = email
+        btnSelected.value = (Util.isEmailValid(email) && password.value!!.length >= 8)
     }
 
-
+    /**
+     * Updating Password to the Live Data and update next button state
+     */
     fun setPassword(password: String) {
         this.password.value = password
+        btnSelected.value = (Util.isEmailValid(email.value!!) && password.length >= 8)
     }
 
-    fun onEmailChanged(email: String) {
-        btnSelected.postValue((Util.isEmailValid(email) && password.value!!.length >= 8))
-    }
-
-    fun onPasswordChanged(password: String) {
-        btnSelected.postValue((Util.isEmailValid(email.value!!) && password.length >= 8))
-    }
-
-
+    /**
+     * Click of Login button
+     */
     fun login() {
-        btnSelected.postValue(false)
-        progressDialog.postValue(true)
+        btnSelected.value = false
+        progressDialog.value = true
         /**
          * TODO NOTE:
          * You can pass entered username and password here to your repository,
@@ -77,16 +100,14 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         object : CountDownTimer(2000, 2000) {
 
             override fun onTick(millisUntilFinished: Long) {
-
             }
 
             override fun onFinish() {
                 userLogin.postValue(User("Waheed", "Nazir", "\uD83D\uDE0E"))
 
-                btnSelected.postValue(true)
-                progressDialog.postValue(false)
+                btnSelected.value = true
+                progressDialog.value = false
             }
         }.start()
     }
-
 }

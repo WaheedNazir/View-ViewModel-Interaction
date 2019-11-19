@@ -63,7 +63,7 @@
                         android:inputType="text"
                         android:paddingStart="5dp"
                         android:textColor="#383838"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         app:backgroundTint="#00ce8f" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -96,11 +96,19 @@
                         android:inputType="textPassword"
                         android:paddingStart="5dp"
                         android:textColor="#383838"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         app:backgroundTint="#00ce8f" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="-4dp"
+                android:text="* Password must be 8 character long."
+                android:textSize="10sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
