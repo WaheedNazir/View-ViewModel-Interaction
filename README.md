@@ -3,7 +3,7 @@ MVVM, View and ViewModel Interaction using LiveData without using DataBinding in
 
 
 ### Demo
-<img src="https://github.com/WaheedNazir/View-ViewModel-Interaction/blob/master/images/sample_demo.gif" />
+<img height="500px" src="https://github.com/WaheedNazir/View-ViewModel-Interaction/blob/master/images/sample_demo.gif" />
 
 
 ### Follow the complete example of MVVVM using Kotlin,Dagger2,LiveData, MediatorLiveData,NetworkBoundResource etc.
